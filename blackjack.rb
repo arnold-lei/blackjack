@@ -36,22 +36,10 @@ def full_deck
 	deck = suits.product(ranks)
 end
 
-def suit(deck)
-	suit = Array.new
-	if full_deck[0]
-		suit = ['♦']
-	elsif	full_deck[1]
-		suit = ['♣']
-	elsif full_deck[2]
-		suit = ['♥']
-	else 
-		suit = ['♠']
-	end
-end
-
 #Player & Dealer hands
 player_hand = []
 dealer_hand = []
+choice = []
 
 #Counter used to keep track of which cards are still in play
 card_counter = [*1..52]
@@ -87,16 +75,18 @@ deal(deck, player_hand, card_counter)
 deal_dealer(deck, dealer_hand, card_counter)
 deal(deck, player_hand, card_counter)
 deal_dealer(deck, dealer_hand, card_counter)
-puts "Deal has #{dealer_hand}"
+puts "Dealer has #{dealer_hand}"
 puts "#{player_name} have #{player_hand}"
+
 loop do
 	puts "Would you like to hit(h) or stay(s)"
 	choice = gets.chomp
 	if choice == 'h'
 		deal(deck, player_hand, card_counter)
+		puts "#{player_name} have #{player_hand}"
 	else
 	end
-end until choice = 'h'
+end until choice == 'h'
 	
 
 
