@@ -1,0 +1,4 @@
+###################BUG LIST##########################
+
+2. Sometimes the an empty card will be drawn
+3. Can not get the application to add the values of the cards to one single number

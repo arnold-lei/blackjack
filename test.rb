@@ -29,11 +29,14 @@ require 'pry'
 #Tie if values are the same 
 #Ask player to play again
 
-#Building the deck
+#Building the deck\
+
+
+
 def full_deck
 	ranks = ['A', 2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K']
-	suits = %w(diamonds clubs hearts spades)
-	#suits = ['♦', '♣', '♥', '♠']
+	#suits = %w(diamonds clubs hearts spades)
+	suits = ['♦', '♣', '♥', '♠']
 	deck = suits.product(ranks)
 
 end
@@ -41,7 +44,8 @@ end
 #Player & Dealer hands
 player_hand = []
 dealer_hand = []
-choice = []
+
+
 
 #Counter used to keep track of which cards are still in play
 card_counter = [*1..52]
@@ -68,30 +72,49 @@ def deal_dealer(deck, dealer_hand, card_counter)
 	card_counter.delete_at(pick)
 end
 
+
+
 #Adding Points Condition
 def adding_points(hand)
+	choice = 0
 	value = hand.collect{|value| value[1]}
 	value.each do |points|
 		sum = 0
 		if points == 'K' || points == 'Q' || points == 'J'
 			points = 10
 		elsif points == 'A'
-			loop do 
 			puts "What value do you want your Ace to be? 1 or 11"
 			choice = gets.chomp.to_i
+			loop do 
 				if choice == 1
-					points << 1
+					points = 1
 				elsif choice == 11
-					points << 11
+					points = 11
 				else
 					puts "please choose 1 or 11"
 				end
 			end until choice == 1 || choice == 11
-		else 
+		else
 		end	
-		
-		sum += points
-		puts sum
+		sum += points 
+		return sum
+	end
+end
+
+player_score = adding_points(player_hand)
+dealer_score = adding_points(dealer_hand)
+
+#Evaluating Winner
+
+def winner(player_score, dealer_score)
+	if player_score > 21
+		puts "Bust, dealer wins"
+	elsif dealer_score > 21
+		puts "Bust #{player_name} wins!"
+	elsif player_score > dealer_score
+		puts "#{player_name}, you win!"
+	elsif player_score > dealer_score
+		puts "Too bad #{player_name}, you lose, try again."
 	end
 end
 
@@ -120,16 +143,33 @@ puts "#{player_name} have #{player_hand}"
 #Player's score
 adding_points(player_hand)
 
+#Player's Hit stay phase
+puts "Would you like to hit(h) or stay(s)"
+choice = gets.chomp.to_s
+deal(deck, player_hand, card_counter)
 loop do
 	puts "Would you like to hit(h) or stay(s)"
-	choice = gets.chomp
+	choice = gets.chomp.to_s
 	if choice == 'h'
 		deal(deck, player_hand, card_counter)
 		puts "#{player_name} you currently have #{player_hand}"
 		adding_points(player_hand)
 	else
+		break
 	end
-end until choice == 'h'
-	
+end until choice == 's'
+
+
+#Dealer's Hit Stay Phase
+loop do
+	puts "Dealer currently has #{dealer_score}"
+	if dealer_score < 17
+		deal_dealer(deck, dealer_hand, card_counter)
+	else 
+		break
+	end
+end
+
+winner(player_score, dealer_score)
 
 
