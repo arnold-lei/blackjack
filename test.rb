@@ -32,7 +32,8 @@ require 'pry'
 #Building the deck
 def full_deck
 	ranks = ['A', 2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K']
-	suits = ['♦', '♣', '♥', '♠']
+	suits = %w(diamonds clubs hearts spades)
+	#suits = ['♦', '♣', '♥', '♠']
 	deck = suits.product(ranks)
 
 end
@@ -69,27 +70,28 @@ end
 
 #Adding Points Condition
 def adding_points(hand)
-	#This card ranking and leaves out the suit
 	value = hand.collect{|value| value[1]}
-	value.map do |points|
+	value.each do |points|
+		sum = 0
 		if points == 'K' || points == 'Q' || points == 'J'
-			points << 10
+			points = 10
 		elsif points == 'A'
 			loop do 
-			puts "What value do you want your Ace to be? 1 or 10"
+			puts "What value do you want your Ace to be? 1 or 11"
 			choice = gets.chomp.to_i
 				if choice == 1
 					points << 1
-				elsif choice == 10
-					points << 10
+				elsif choice == 11
+					points << 11
 				else
-					puts "please choose 1 or 10"
+					puts "please choose 1 or 11"
 				end
-			end until choice == 1 || choice == 10
+			end until choice == 1 || choice == 11
 		else 
-		end
-		score = value.inject{|sum, card| sum + card}
-		p score	
+		end	
+		
+		sum += points
+		puts sum
 	end
 end
 

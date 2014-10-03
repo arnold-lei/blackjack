@@ -99,17 +99,27 @@ deck = full_deck
 puts "Welcome to my table, what's your name?"
 player_name = gets.chomp
 puts "Hi #{player_name} good luck!"
+
 #Deal Player's first card
 deal(deck, player_hand, card_counter)
+
 #Deal Computer's First Card
 deal_dealer(deck, dealer_hand, card_counter)
+
 #Deal Player's Second Card
 deal(deck, player_hand, card_counter)
+
 #Deal Computer's Second Card
 deal_dealer(deck, dealer_hand, card_counter)
 puts "Dealer has #{dealer_hand}" 
+
+#Dealer's total score
 adding_points(dealer_hand)
+
+#Player's hand
 puts "#{player_name} have #{player_hand}" 
+
+#Player's score
 adding_points(player_hand)
 
 loop do
