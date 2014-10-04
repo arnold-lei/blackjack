@@ -29,7 +29,8 @@ require 'pry'
 #Tie if values are the same 
 #Ask player to play again
 
-#Building the deck
+#Building the deck\
+
 
 
 def full_deck
@@ -43,7 +44,10 @@ end
 #Player & Dealer hands
 player_hand = []
 dealer_hand = []
-choice = []
+
+
+
+
 
 #Counter used to keep track of which cards are still in play
 card_counter = [*1..52]
@@ -74,16 +78,16 @@ end
 
 #Adding Points Condition
 def adding_points(hand)
-	value = hand.collect{|value| value[1]}
 	choice = 0
-	sum = 0
-	value.each do |points|
+	sum = 0 
+	score = hand.collect{|value| value[1]}
+		value  = value.each do |points|
 		if points == 'K' || points == 'Q' || points == 'J'
 			points = 10
 		elsif points == 'A'
-			loop do 
 			puts "What value do you want your Ace to be? 1 or 11"
 			choice = gets.chomp.to_i
+			loop do 
 				if choice == 1
 					points = 1
 				elsif choice == 11
@@ -92,11 +96,12 @@ def adding_points(hand)
 					puts "please choose 1 or 11"
 				end
 			end until choice == 1 || choice == 11
-		else 
+		else
 		end	
-		sum += points
+	  return score
 	end
-	return sum
+	 sum = score.each {|i| sum + i}
+	 return sum 
 end
 
 player_score = adding_points(player_hand)
@@ -142,9 +147,12 @@ puts "#{player_name} have #{player_hand}"
 adding_points(player_hand)
 
 #Player's Hit stay phase
+puts "Would you like to hit(h) or stay(s)"
+choice = gets.chomp.to_s
+deal(deck, player_hand, card_counter)
 loop do
 	puts "Would you like to hit(h) or stay(s)"
-	choice = gets.chomp
+	choice = gets.chomp.to_s
 	if choice == 'h'
 		deal(deck, player_hand, card_counter)
 		puts "#{player_name} you currently have #{player_hand}"
@@ -153,6 +161,7 @@ loop do
 		break
 	end
 end until choice == 's'
+
 
 #Dealer's Hit Stay Phase
 loop do
