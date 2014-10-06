@@ -80,8 +80,8 @@ end
 def adding_points(hand)
 	choice = 0
 	sum = 0 
-	score = hand.collect{|value| value[1]}
-		value  = value.each do |points|
+	score = hand.collect{|value| value[1]} #Only collect the Rankings of the cards and not the suit
+		value  = value.each do |points| #Should only return numbers 
 		if points == 'K' || points == 'Q' || points == 'J'
 			points = 10
 		elsif points == 'A'
@@ -97,6 +97,7 @@ def adding_points(hand)
 				end
 			end until choice == 1 || choice == 11
 		else
+			points = points 
 		end	
 	  return score
 	end
