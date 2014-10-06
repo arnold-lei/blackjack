@@ -2,3 +2,23 @@
 
 2. Sometimes the an empty card will be drawn
 3. Can not get the application to add the values of the cards to one single number
+
+def calculating_totals(cards)
+	value = cards.select {|e| e[1]}
+	
+	total = 0 
+	value.each do |card|
+		if card == "A"
+			total += 11
+		elsif card.to_i == 0
+			total += 10
+		else
+			total += card.to_i
+		end
+	end
+
+	value.select{|card| card == 'A'}.count.times do 
+		total -= 10 if total > 21
+	end
+	total 
+end
