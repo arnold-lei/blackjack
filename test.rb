@@ -1,160 +1,105 @@
-# Interactive command line blackjack game
+require 'pry'
 
 
-def calculate_total(cards) 
-  # [['H', '3'], ['S', 'Q'], ... ]
-  arr = cards.map{|e| e[1] }
+#This is my second attempt at BlackJack after watching some of the solutions video. I think it might just be easier to restart
+#then to salvage my code as is. 
+#Methods!
+def calculating_totals(cards)
+	#isolate the rankings of the cards from the suits
+	value = cards.map {|e| e[1] }
 
-  total = 0
-  arr.each do |value|
-    if value == "A"
-      total += 11
-    elsif value.to_i == 0 # J, Q, K
-      total += 10
-    else
-      total += value.to_i
-    end
-  end
+	total = 0 
+	value.each do |card|
+		if card == "A"
+			total += 11
+		elsif card.to_i == 0
+			total += 10
+		else
+			total += card.to_i
+		end
+	end
 
-  #correct for Aces
-  arr.select{|e| e == "A"}.count.times do
-    total -= 10 if total > 21
-  end
+	value.select{|card| card == 'A'}.count.times do 
+		total -= 10 if total > 21
+	end
+	total 
+end
 
-  total
-end1
+#Deal
+def deal(deck, hand)
+	hand << deck.pop
+end
 
-# Start Game
+#Welcome to Black Jack
+puts "Welcome to Black Jack"
+puts "Welcome to my table, what's your name?"
+player_name = gets.chomp
+puts "Hi #{player_name} good luck!"
 
-puts "Welcome to Blackjack!"
-
-suits = ['H', 'D', 'S', 'C']
-cards = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
-
-deck = suits.product(cards)
+#Creating the Deck
+ranking = %w(1 2 3 4 5 6 7 8 9 10)
+suits = %w(♦ ♣ ♥ ♠)
+deck = suits.product(ranking)
 deck.shuffle!
 
-# Deal Cards
+#Dealing Cards
+player_hand = []
+dealer_hand = []
 
-mycards = []
-dealercards = []
 
-mycards << deck.pop
-dealercards << deck.pop
-mycards << deck.pop
-dealercards << deck.pop
+player_hand << deck.pop
+dealer_hand << deck.pop
+player_hand << deck.pop
+dealer_hand << deck.pop
 
-dealertotal = calculate_total(dealercards)
-mytotal = calculate_total(mycards)
+dealer_total = calculating_totals(dealer_hand)
+player_total = calculating_totals(player_hand)
 
-# Show Cards
+puts "Dealer has: #{dealer_hand[0]} and #{dealer_hand[1]}, for a total of #{dealer_total}"
+puts "You have: #{player_hand[0]} and #{player_hand[1]}, for a total of: #{player_total}"
 
-puts "Dealer has: #{dealercards[0]} and #{dealercards[1]}, for a total of #{dealertotal}"
-puts "You have: #{mycards[0]} and #{mycards[1]}, for a total of: #{mytotal}"
-puts ""
+#Player's Hit stay phase
 
-# Player turn
-if mytotal == 21
-  puts "Congratulations, you hit blackjack! You win!"
-  exit
+if player_total == 21
+	puts "Congratulation you won!"
+	exit 
+end 
+
+while player_total < 21 do 
+	puts "What would you like to do? Type 'H' to Hit, type 'S' to Stay"
+	choice = gets.chomp.to_s.upcase!
+	if choice == 'H'
+		deal(deck, player_hand)
+	elsif choice == 'S'
+		puts "You choose to stay."
+		break
+	else
+		puts "Please choose 'H' or 'S'"
+	end
+	player_total = calculating_totals(player_hand)
+	#not sure why I have to recalculate this again. 
+	puts "You have #{player_hand} for a total of #{player_total}"
 end
 
-while mytotal < 21
-  puts "What would you like to do? 1) hit 2) stay"
-  hit_or_stay = gets.chomp
-
-  if !['1', '2'].include?(hit_or_stay)
-    puts "Error: you must enter 1 or 2"
-    next
-  end
-
-  if hit_or_stay == "2"
-    puts "You chose to stay."
-    break
-  end
-
-  #hit
-  new_card = deck.pop
-  puts "Dealing card to player: #{new_card}"
-  mycards << new_card
-  mytotal = calculate_total(mycards)
-  puts "Your total is now: #{mytotal}"
-
-  if mytotal == 21
-    puts "Congratulations, you hit blackjack! You win!"
-    exit
-  elsif mytotal > 21
-    puts "Sorry, it looks like you busted!"
-    exit
-  end
+if player_total > 21 
+	puts "Sorry, you busted"
+	exit 
+elsif player_total == 21
+	puts "Congratulation you won!"
+	exit 
 end
 
-# Dealer turn
+#Dealer's Turn
 
-if dealertotal == 21
-  puts "Sorry, dealer hit blackjack. You lose."
-  exit
+while dealer_total < 16
+	dealer_total = calculating_totals(dealer_hand)
+	deal(deck, dealer_hand)
 end
 
-while dealertotal < 17
-  #hit
-  new_card = deck.pop
-  puts "Dealing new card for dealer: #{new_card}"
-  dealercards << new_card
-  dealertotal = calculate_total(dealercards)
-  puts "Dealer total is now: #{dealertotal}"
-
-  if dealertotal == 21
-    puts "Sorry, dealer hit blackjack. You lose."
-    exit
-  elsif dealertotal > 21
-    puts "Congratulations, dealer busted! You win!"
-    exit
-  end
+if dealer_total > 21
+	puts "Congratualtions Dealer busted, you win!"
+elsif dealer_total > player_total
+	puts "Dealer has #{dealer_total}, you have #{player_total} sorry you lose"
+elsif player_total > dealer_total
+	puts "Dealer has #{dealer_total}, you have #{player_total} Congratualtions you win"
 end
-
-# Compare hands
-
-puts "Dealer's cards: "
-dealercards.each do |card|
-  puts "=> #{card}"
-end
-puts ""
-
-puts "Your cards:"
-mycards.each do |card|
-  puts "=> #{card}"
-end
-puts ""
-
-if dealertotal > mytotal
-  puts "Sorry, dealer wins."
-elsif dealertotal < mytotal
-  puts "Congratulations, you win!"
-else
-  puts "It's a tie!"
-end
-
-exit
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -1,4 +1,6 @@
 require 'pry'
+
+
 #There are 52 Cards in a deck 
 #13 cards of each suit
 #cards go 1-10,J,Q,K,A
