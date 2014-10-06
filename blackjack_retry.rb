@@ -1,5 +1,6 @@
 require 'pry'
 
+
 #This is my second attempt at BlackJack after watching some of the solutions video. I think it might just be easier to restart
 #then to salvage my code as is. 
 #Methods!
